@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import LoginForm from "./components/LoginForm/LoginForm";
+import MyComponent from "./components/MyComponent/MyComponent";
+import SearchBar from "./components/SearchBar/SearchBar";
+import LangSwitcher from "./components/LangSwitcher/LangSwitcher";
+import Select from "./components/Select/Select";
+import Checkbox from "./components/Checkbox/Checkbox";
+
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [count, setCount] = useState(0);
+  const [inputValue, setInputValue] = useState("");
+  const [lang, setLang] = useState("uk");
+  const [coffeeSize, setCoffeeSize] = useState("sm");
+  const [hasAccepted, setHasAccepted] = useState(false);
+
+  const handleLogin = (userData) => {
+    // Виконуємо необхідні операції з даними
+    console.log(userData);
+  };
+
+  const handleChange = (evt) => {
+    setInputValue(evt.target.value);
+  };
+
+  const handleSizeChange = (evt) => {
+    setCoffeeSize(evt.target.value);
+  };
+
+  const handleChangeChecbox = (evt) => {
+    setHasAccepted(evt.target.checked);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+    <div>
+      <h1>Please login to your account!</h1>
+      {/* Передаємо колбек як пропс форми */}
+      <LoginForm onLogin={handleLogin} />
+      <MyComponent />
+      <SearchBar inputValue={inputValue} handleChange={handleChange} />
+      <p>Selected language: {lang}</p>
+      <LangSwitcher value={lang} onSelect={setLang} />
+      <p>
+        <b>Selected size:</b> {coffeeSize}
       </p>
-    </>
-  )
+      <Select value={coffeeSize} handleSizeChange={handleSizeChange} />
+      <Checkbox
+        hasAccepted={hasAccepted}
+        handleChangeChecbox={handleChangeChecbox}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
