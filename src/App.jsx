@@ -9,20 +9,23 @@ import Checkbox from "./components/Checkbox/Checkbox";
 import "./App.css";
 
 function App() {
-  // const [count, setCount] = useState(0);
   const [inputValue, setInputValue] = useState("");
+  const [values, setValues] = useState({
+    login: "",
+    password: ""
+  });
   const [lang, setLang] = useState("uk");
   const [coffeeSize, setCoffeeSize] = useState("sm");
   const [hasAccepted, setHasAccepted] = useState(false);
 
-  const handleLogin = (userData) => {
-    // Виконуємо необхідні операції з даними
-    console.log(userData);
+  const handleChange = (evt) => {
+    setValues({
+      ...values,
+      [evt.target.name]: evt.target.value,
+    });
   };
 
-  const handleChange = (evt) => {
-    setInputValue(evt.target.value);
-  };
+  
 
   const handleSizeChange = (evt) => {
     setCoffeeSize(evt.target.value);
@@ -36,7 +39,7 @@ function App() {
     <div>
       <h1>Please login to your account!</h1>
       {/* Передаємо колбек як пропс форми */}
-      <LoginForm onLogin={handleLogin} />
+      <LoginForm values={values} handleChange={handleChange} />
       <MyComponent />
       <SearchBar inputValue={inputValue} handleChange={handleChange} />
       <p>Selected language: {lang}</p>
