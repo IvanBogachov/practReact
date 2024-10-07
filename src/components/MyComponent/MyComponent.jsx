@@ -1,16 +1,8 @@
-import styles from "./MyComponent.module.css";
+import React from "react";
+import ArticleList from "../ArticleList/ArticleList";
 
-import { useId } from "react";
-
-const MyComponent = () => {
-  const id = useId();
-
-  return (
-    <div>
-      <label htmlFor={id}>Text field label</label>
-      <input type="text" id={id} />
-    </div>
-  );
+const MyComponent = ({ articles }) => {
+  return <div>{articles.length > 0 && <ArticleList items={articles} />}</div>;
 };
 
 export default MyComponent;

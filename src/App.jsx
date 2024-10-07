@@ -1,57 +1,67 @@
 import { useEffect, useState } from "react";
-import LoginForm from "./components/LoginForm/LoginForm";
 import MyComponent from "./components/MyComponent/MyComponent";
-import SearchBar from "./components/SearchBar/SearchBar";
-import LangSwitcher from "./components/LangSwitcher/LangSwitcher";
-import Select from "./components/Select/Select";
-import Checkbox from "./components/Checkbox/Checkbox";
+import SearchForm from "./components/SearchForm/SearchForm";
+import { fetchArticlesWithTopic } from "./articles-api";
+import axios from "axios";
 
 import "./App.css";
 
 function App() {
-  const [inputValue, setInputValue] = useState("");
-  const [values, setValues] = useState({
-    login: "",
-    password: ""
-  });
-  const [lang, setLang] = useState("uk");
-  const [coffeeSize, setCoffeeSize] = useState("sm");
-  const [hasAccepted, setHasAccepted] = useState(false);
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  const handleChange = (evt) => {
-    setValues({
-      ...values,
-      [evt.target.name]: evt.target.value,
-    });
+  const handleSearch = async (topic) => {
+    try {
+      setArticles([]);
+      setError(false);
+      setLoading(true);
+      const data = await fetchArticlesWithTopic(topic);
+      setArticles(data);
+    } catch (error) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  
+  // useEffect(() => {
+  //   // 1. Оголошуємо асинхронну функцію
+  //   async function fetchArticles() {
+  //     try {
+  //       // 1. Встановлюємо індикатор в true перед запитом
+  //       setLoading(true);
+  //       // 2. Використовуємо HTTP-функцію
+  //       const data = await fetchArticlesWithTopic("react");
+  //       setArticles(data);
+  //     } catch (error) {
+  //       // Встановлюємо стан error в true
+  //       setError(true);
+  //     } finally {
+  //       // 2. Встановлюємо індикатор в false після запиту
+  //       setLoading(false);
+  //     }
+  //   }
 
-  const handleSizeChange = (evt) => {
-    setCoffeeSize(evt.target.value);
-  };
-
-  const handleChangeChecbox = (evt) => {
-    setHasAccepted(evt.target.checked);
-  };
+  //   // 2. Викликаємо її одразу після оголошення
+  //   fetchArticles();
+  // }, []);
 
   return (
     <div>
-      <h1>Please login to your account!</h1>
-      {/* Передаємо колбек як пропс форми */}
-      <LoginForm values={values} handleChange={handleChange} />
-      <MyComponent />
-      <SearchBar inputValue={inputValue} handleChange={handleChange} />
-      <p>Selected language: {lang}</p>
-      <LangSwitcher value={lang} onSelect={setLang} />
-      <p>
-        <b>Selected size:</b> {coffeeSize}
-      </p>
-      <Select value={coffeeSize} handleSizeChange={handleSizeChange} />
-      <Checkbox
-        hasAccepted={hasAccepted}
-        handleChangeChecbox={handleChangeChecbox}
-      />
+      <div>
+        <h1>Latest articles</h1>
+        <SearchForm onSearch={handleSearch} />
+        {/* {loading && <Loader />}
+        {error && <Error />} */}
+        {/* {loading && (
+          <p style={{ fontSize: 20 }}>Loading data, please wait...</p>
+        )}
+        {error && (
+          <p>Whoops, something went wrong! Please try reloading this page!</p>
+        )} */}
+        <MyComponent articles={articles} />
+      </div>
     </div>
   );
 }
