@@ -1,57 +1,39 @@
-import { useEffect, useState } from "react";
-import LoginForm from "./components/LoginForm/LoginForm";
+import { forwardRef, useState, useRef, useEffect } from "react";
+import { useMemo } from "react";
 import MyComponent from "./components/MyComponent/MyComponent";
-import SearchBar from "./components/SearchBar/SearchBar";
-import LangSwitcher from "./components/LangSwitcher/LangSwitcher";
-import Select from "./components/Select/Select";
-import Checkbox from "./components/Checkbox/Checkbox";
+import Player from "./components/Player/Player";
 
 import "./App.css";
 
+const CustomButton = forwardRef((props, ref) => (
+  <button ref={ref}>{props.children}</button>
+));
+
 function App() {
-  const [inputValue, setInputValue] = useState("");
-  const [values, setValues] = useState({
-    login: "",
-    password: ""
-  });
-  const [lang, setLang] = useState("uk");
-  const [coffeeSize, setCoffeeSize] = useState("sm");
-  const [hasAccepted, setHasAccepted] = useState(false);
+  const [planets, setPlanets] = useState(["Earth", "Mars", "Jupiter", "Venus"]);
+  const [query, setQuery] = useState("");
+  const [clicks, setClicks] = useState(0);
 
-  const handleChange = (evt) => {
-    setValues({
-      ...values,
-      [evt.target.name]: evt.target.value,
-    });
-  };
+  const btnRef = useRef();
 
-  
+  const filteredPlanets = useMemo(
+    () => planets.filter((planet) => planet.includes(query)),
+    [planets, query]
+  );
 
-  const handleSizeChange = (evt) => {
-    setCoffeeSize(evt.target.value);
-  };
-
-  const handleChangeChecbox = (evt) => {
-    setHasAccepted(evt.target.checked);
-  };
+  useEffect(() => btnRef.current.focus(), []);
 
   return (
     <div>
-      <h1>Please login to your account!</h1>
-      {/* Передаємо колбек як пропс форми */}
-      <LoginForm values={values} handleChange={handleChange} />
-      <MyComponent />
-      <SearchBar inputValue={inputValue} handleChange={handleChange} />
-      <p>Selected language: {lang}</p>
-      <LangSwitcher value={lang} onSelect={setLang} />
-      <p>
-        <b>Selected size:</b> {coffeeSize}
-      </p>
-      <Select value={coffeeSize} handleSizeChange={handleSizeChange} />
-      <Checkbox
-        hasAccepted={hasAccepted}
-        handleChangeChecbox={handleChangeChecbox}
+      <MyComponent
+        clicks={clicks}
+        setClicks={setClicks}
+        query={query}
+        setQuery={setQuery}
+        filteredPlanets={filteredPlanets}
       />
+      <Player source="http://media.w3.org/2010/05/sintel/trailer.mp4" />
+      <CustomButton ref={btnRef}>Button with forwarded ref</CustomButton>
     </div>
   );
 }

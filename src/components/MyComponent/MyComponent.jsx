@@ -1,14 +1,20 @@
-import styles from "./MyComponent.module.css";
-
-import { useId } from "react";
-
-const MyComponent = () => {
-  const id = useId();
-
+const MyComponent = ({
+  clicks,
+  setClicks,
+  query,
+  setQuery,
+  filteredPlanets,
+}) => {
   return (
     <div>
-      <label htmlFor={id}>Text field label</label>
-      <input type="text" id={id} />
+      <button onClick={() => setClicks(clicks + 1)}>
+        Number of clicks: {clicks}
+      </button>
+      <ul>
+        {filteredPlanets.map((planet) => (
+          <li key={planet}>{planet}</li>
+        ))}
+      </ul>
     </div>
   );
 };
