@@ -2,7 +2,7 @@ import { Button } from "../Button/Button";
 // 1. Імпортуємо хук
 import { useDispatch } from "react-redux";
 // 2. Імпортуємо фабрику екшену
-import { addTask } from "../../redux/actions";
+import { addTask } from "../../redux/tasksSlice.js";
 import css from "./TaskForm.module.css";
 
 export const TaskForm = () => {
